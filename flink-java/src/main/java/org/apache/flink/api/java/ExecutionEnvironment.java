@@ -464,6 +464,8 @@ public class ExecutionEnvironment {
      * @param filePath The path of the file, as a URI (e.g., "file:///some/local/file" or
      *     "hdfs://host:port/file/path").
      * @return A {@link DataSet} that represents the data read from the given file as text lines.
+     *
+     * @apiNote 该方法支持读取文件、递归读取目录下的所有文件、压缩文件等等
      */
     public DataSource<String> readTextFile(String filePath) {
         Preconditions.checkNotNull(filePath, "The file path may not be null.");
