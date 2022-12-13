@@ -40,11 +40,15 @@ import java.util.Set;
 /**
  * A {@link Window} that represents a time interval from {@code start} (inclusive) to {@code end}
  * (exclusive).
+ *
+ * @apiNote 时间窗口，基于时间生成的窗口。
  */
 @PublicEvolving
 public class TimeWindow extends Window {
 
+    // 窗口的开始时间（包含）
     private final long start;
+    // 窗口的结束时间（不包含）
     private final long end;
 
     public TimeWindow(long start, long end) {
@@ -260,6 +264,8 @@ public class TimeWindow extends Window {
      * @param offset The offset which window start would be shifted by.
      * @param windowSize The size of the generated windows.
      * @return window start
+     *
+     * @apiNote 计算该元素（timestamp）对应窗口的开始时间。
      */
     public static long getWindowStartWithOffset(long timestamp, long offset, long windowSize) {
         return timestamp - (timestamp - offset + windowSize) % windowSize;

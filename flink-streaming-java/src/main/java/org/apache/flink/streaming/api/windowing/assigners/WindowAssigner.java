@@ -39,6 +39,8 @@ import java.util.Collection;
  *
  * @param <T> The type of elements that this WindowAssigner can assign windows to.
  * @param <W> The type of {@code Window} that this assigner assigns.
+ *
+ * @apiNote 窗口分配器
  */
 @PublicEvolving
 public abstract class WindowAssigner<T, W extends Window> implements Serializable {
@@ -50,6 +52,8 @@ public abstract class WindowAssigner<T, W extends Window> implements Serializabl
      * @param element The element to which windows should be assigned.
      * @param timestamp The timestamp of the element.
      * @param context The {@link WindowAssignerContext} in which the assigner operates.
+     *
+     * @apiNote 将某个带有时间戳 timestamp 的元素 element 分配给一个或多个窗口，并返回窗口集合。
      */
     public abstract Collection<W> assignWindows(
             T element, long timestamp, WindowAssignerContext context);
@@ -60,12 +64,16 @@ public abstract class WindowAssigner<T, W extends Window> implements Serializabl
     /**
      * Returns a {@link TypeSerializer} for serializing windows that are assigned by this {@code
      * WindowAssigner}.
+     *
+     * @apiNote 返回一个类型序列化器用来序列化窗口。
      */
     public abstract TypeSerializer<W> getWindowSerializer(ExecutionConfig executionConfig);
 
     /**
      * Returns {@code true} if elements are assigned to windows based on event time, {@code false}
      * otherwise.
+     *
+     * @apiNote 如果窗口是基于元素的事件时间的，返回 true，否则返回 false。
      */
     public abstract boolean isEventTime();
 
@@ -80,6 +88,7 @@ public abstract class WindowAssigner<T, W extends Window> implements Serializabl
     public abstract static class WindowAssignerContext {
 
         /** Returns the current processing time. */
+        // 获取当前的处理时间。在使用处理时间类型的窗口时，会使用该方法。
         public abstract long getCurrentProcessingTime();
     }
 }
