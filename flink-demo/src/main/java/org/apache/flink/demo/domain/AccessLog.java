@@ -1,7 +1,5 @@
 package org.apache.flink.demo.domain;
 
-import lombok.Data;
-
 import org.apache.flink.demo.util.IpUtils;
 
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -13,7 +11,7 @@ import java.util.Random;
  * @author jie zhao
  * @date 2022/12/10 12:19
  */
-@Data
+//@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccessLog {
