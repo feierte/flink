@@ -21,11 +21,11 @@
 		<!-- 解決报错:
 			No ExecutorFactory found to execute the application.
 			 -->
-		<!--<dependency>
+		<dependency>
 			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-clients_${scala.binary.version}</artifactId>
+			<artifactId>flink-clients</artifactId>
 			<version>${project.version}</version>
-		</dependency>-->
+		</dependency>
 
 
 		<dependency>
@@ -63,6 +63,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-table-runtime</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-table-api-java</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -79,6 +84,21 @@
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-table-api-scala-bridge_${scala.binary.version}</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-table-planner_${scala.binary.version}</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!--<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-table-planner-loader</artifactId>
+			<version>${project.version}</version>
+		</dependency>-->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-sql-parser</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
