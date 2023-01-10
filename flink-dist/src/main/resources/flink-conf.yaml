@@ -30,7 +30,7 @@
 # automatically configure the host name based on the hostname of the node where the
 # JobManager runs.
 
-jobmanager.rpc.address: localhost
+jobmanager.rpc.address: 192.168.159.135
 
 # The RPC port where the JobManager is reachable.
 
@@ -187,7 +187,7 @@ jobmanager.execution.failover-strategy: region
 
 # The address to which the REST client will connect to
 #
-rest.address: localhost
+rest.address: 192.168.159.135
 
 # Port range for the REST and web server to bind to.
 #

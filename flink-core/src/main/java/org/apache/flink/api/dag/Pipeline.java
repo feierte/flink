@@ -21,6 +21,9 @@ package org.apache.flink.api.dag;
 
 import org.apache.flink.annotation.Internal;
 
-/** Common interface for Flink pipelines. */
+/**
+ * Common interface for Flink pipelines.
+ * @apiNote 表示用户的一个作业，即一个 Job。
+ */
 @Internal
 public interface Pipeline {}

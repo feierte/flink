@@ -49,7 +49,11 @@ import java.util.Set;
 import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkState;
 
-/** Class representing the operators in the streaming programs, with all their properties. */
+/**
+ * Class representing the operators in the streaming programs, with all their properties.
+ *
+ * @apiNote StreamNode 是 StreamGraph 中的节点，从 Transformation 转换而来，可以简单理解为一个 StreamNode 表示一个算子。
+ */
 @Internal
 public class StreamNode {
 
