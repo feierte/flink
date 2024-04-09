@@ -34,6 +34,8 @@ public abstract class Window {
      * Gets the largest timestamp that still belongs to this window.
      *
      * @return The largest timestamp that still belongs to this window.
+     *
+     * @apiNote 该 window 时间跨度内所能包含的最大时间点（用时间戳表示）。即大于这个时间点的都不属于该 window。
      */
     public abstract long maxTimestamp();
 }

@@ -47,9 +47,9 @@ import java.util.Collections;
 public class TumblingEventTimeWindows extends WindowAssigner<Object, TimeWindow> {
     private static final long serialVersionUID = 1L;
 
-    private final long size;
+    private final long size; // 窗口大小
 
-    private final long globalOffset;
+    private final long globalOffset; // 窗口的偏移量
 
     private Long staggerOffset = null;
 
@@ -71,6 +71,7 @@ public class TumblingEventTimeWindows extends WindowAssigner<Object, TimeWindow>
             Object element, long timestamp, WindowAssignerContext context) {
         if (timestamp > Long.MIN_VALUE) {
             if (staggerOffset == null) {
+                // 这是一个新特性，为了解决同一时间触发大量的窗口计算造成的性能问题
                 staggerOffset =
                         windowStagger.getStaggerOffset(context.getCurrentProcessingTime(), size);
             }

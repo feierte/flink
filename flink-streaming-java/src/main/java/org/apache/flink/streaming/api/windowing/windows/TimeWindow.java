@@ -44,8 +44,8 @@ import java.util.Set;
 @PublicEvolving
 public class TimeWindow extends Window {
 
-    private final long start;
-    private final long end;
+    private final long start; // 窗口的开始时间（包含）
+    private final long end; // 窗口的结束时间（不包含）
 
     public TimeWindow(long start, long end) {
         this.start = start;
@@ -260,6 +260,12 @@ public class TimeWindow extends Window {
      * @param offset The offset which window start would be shifted by.
      * @param windowSize The size of the generated windows.
      * @return window start
+     *
+     * @apiNote 计算该元素（timestamp）对应窗口的开始时间。
+     * 如果是滚动窗口，windowSize 指的是窗口大小，如果是滑动窗口，windowSize 指的是滑步步长。
+     * offset 是时间偏移量。举个例子：
+     *      offset = 0 时，假设时间窗口是 5 分钟，则后续窗口周期为 12:00~12:05，12:05~12:10......
+     *      offset = 2 时，假设时间窗口是 5 分钟，则后续窗口周期为 12:02~12:07，12:07~12:12......
      */
     public static long getWindowStartWithOffset(long timestamp, long offset, long windowSize) {
         return timestamp - (timestamp - offset + windowSize) % windowSize;

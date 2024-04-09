@@ -31,6 +31,9 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 /**
  * An edge in the streaming topology. One edge like this does not necessarily gets converted to a
  * connection between two job vertices (due to chaining/optimization).
+ *
+ * @apiNote StreamEdge 是 StreamGraph 中的边，用来连接两个 StreamNode，一个 StreamNode 可以有多个出边，入边，
+ * StreamEdge 中包含了旁路输出，分区器，字段筛选输出等信息。
  */
 @Internal
 public class StreamEdge implements Serializable {

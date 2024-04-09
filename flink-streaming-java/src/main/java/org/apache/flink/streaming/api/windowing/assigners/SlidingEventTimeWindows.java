@@ -48,9 +48,9 @@ import java.util.List;
 public class SlidingEventTimeWindows extends WindowAssigner<Object, TimeWindow> {
     private static final long serialVersionUID = 1L;
 
-    private final long size;
+    private final long size; // 窗口大小
 
-    private final long slide;
+    private final long slide; // 窗口滑步大小
 
     private final long offset;
 
