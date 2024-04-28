@@ -25,6 +25,9 @@ import org.apache.flink.runtime.scheduler.strategy.ConsumerVertexGroup;
 
 import java.util.List;
 
+/**
+ * 表示 ExecutionVertex 的一个输出分区。一个 IntermediateResultPartition 会被 一个或多个其他的 ExecutionVertex 消费。
+ */
 public class IntermediateResultPartition {
 
     private final IntermediateResult totalResult;

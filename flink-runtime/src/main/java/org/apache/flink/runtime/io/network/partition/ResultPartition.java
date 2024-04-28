@@ -72,6 +72,8 @@ import static org.apache.flink.util.Preconditions.checkState;
  * <h2>Buffer management</h2>
  *
  * <h2>State management</h2>
+ *
+ * @apiNote 物理执行图中的一个组件。表示由 Task 生成的数据，和 ExecutionGraph 中的 IntermediateResultPartition 一一对应。
  */
 public abstract class ResultPartition implements ResultPartitionWriter {
 

@@ -78,6 +78,11 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  *
  * <p>The running state can be queried in a RPC method handler or in the main thread by calling
  * {@link #isRunning()} method.
+ *
+ * @apiNote 对 RPC 框架中提供具体服务的实体的抽象，所有提供远程调用方法的组件都需要继承该抽象类。
+ * 对于同一个 RpcEndpoint 的所有 RPC 调用都会在同一个线程（ RpcEndpoint 的主线程）中执行，因此无需担心并发执行的线程安全问题。
+ *
+ * <p>该类可以类比与 Akka 框架中的 Actor 概念。
  */
 public abstract class RpcEndpoint implements RpcGateway, AutoCloseableAsync {
 

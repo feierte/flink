@@ -76,6 +76,9 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  *
  * <p>The {@code ExecutionJobVertex} corresponds to a parallelized operation. It contains an {@link
  * ExecutionVertex} for each parallel instance of that operation.
+ *
+ * @apiNote 表示 ExecutionGraph 中的顶点，和 JobGraph 中的 JobVertex 一一对应。是 Flink 中 task 概念的具体实现。
+ * 一个 task 对应一个或多个 subtask（取决于设置的并行度）。subtask 对应的实现是 ExecutionVertex。
  */
 public class ExecutionJobVertex
         implements AccessExecutionJobVertex, Archiveable<ArchivedExecutionJobVertex> {

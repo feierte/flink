@@ -40,7 +40,12 @@ import java.util.List;
 
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
-/** The base class for job vertexes. */
+/**
+ * The base class for job vertexes.
+ *
+ * @apiNote 表示 JobGraph 的顶点。经过优化后符合条件的多个 StreamNode 可能会 chain 在一起生成一个 JobVertex，
+ * 即一个 JobVertex 包含一个或多个 operator，JobVertex 的输入是 JobEdge，输出是 IntermediateDataSet。
+ */
 public class JobVertex implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;

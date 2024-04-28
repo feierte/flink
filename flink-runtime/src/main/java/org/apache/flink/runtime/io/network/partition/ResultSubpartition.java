@@ -27,7 +27,12 @@ import java.io.IOException;
 
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
-/** A single subpartition of a {@link ResultPartition} instance. */
+/**
+ * A single subpartition of a {@link ResultPartition} instance.
+ *
+ * @apiNote 物理执行图中的一个概念。是 ResultPartition 的一个子分区。每个 ResultPartition 包含多个 ResultSubpartition，
+ * 其数目要由下游 Task 数和 DistributionPattern 决定。
+ */
 public abstract class ResultSubpartition {
 
     /** The info of the subpartition to identify it globally within a task. */

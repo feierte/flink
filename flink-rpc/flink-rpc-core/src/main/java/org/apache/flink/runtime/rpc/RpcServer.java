@@ -20,7 +20,13 @@ package org.apache.flink.runtime.rpc;
 
 import java.util.concurrent.CompletableFuture;
 
-/** Interface for self gateways. */
+/**
+ * Interface for self gateways.
+ *
+ * @apiNote 相当于 RpcEndpoint 自身的代理对象（self gateway）。
+ *
+ * <p>可以类比于 Akka 框架中的 ActorRef 概念
+ */
 public interface RpcServer extends StartStoppable, MainThreadExecutable, RpcGateway {
 
     /**

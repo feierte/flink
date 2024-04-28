@@ -31,6 +31,11 @@ import java.util.concurrent.TimeUnit;
  * Interface for rpc services. An rpc service is used to start and connect to a {@link RpcEndpoint}.
  * Connecting to a rpc server will return a {@link RpcGateway} which can be used to call remote
  * procedures.
+ *
+ * @apiNote 是 RpcEndpoint 的运行环境，提供了管理 RpcEndpoint 的诸多方法。例如：启动 RpcEndpoint，连接远程的 RpcEndpoint 并返回
+ * 远程 RpcEndpoint 的代理对象等等。此外，RpcService 还提供了某些异步任务或者周期性调度任务的方法。
+ *
+ * <p>可以类比于 Akka 框架中的 ActorSystem 概念。
  */
 public interface RpcService {
 

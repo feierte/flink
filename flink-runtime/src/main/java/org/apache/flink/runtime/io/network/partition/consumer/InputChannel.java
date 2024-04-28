@@ -47,6 +47,14 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  *   <li>{@link #getNextBuffer()}
  *   <li>{@link #releaseAllResources()}
  * </ol>
+ *
+ * @apiNote 物理执行图中的一个组件。每个 InputGate 会包含一个以上的 InputChannel，InputChannel 和 ExecutionGraph 中的
+ * ExecutionEdge 一一对应，也和 ResultSubpartition 一对一地相连，即一个 InputChannel 接收一个 ResultSubpartition 的输出。
+ * <p></p>
+ * ExecutionEdge 是 flink 1.12及之前版本中的类，表示 ExecutionVertex 的输入，连接到上游产生的 IntermediateResultPartition。
+ * 通过 ExecutionEdge 将 ExecutionVertex 和 IntermediateResultPartition 连接起来，进而在 ExecutionVertex 和 IntermediateResultPartition 之间建立联系。
+ * 1 个 Execution 对应唯一的 1 个 IntermediateResultPartition 和 1 个 ExecutionVertex。1 个 ExecutionVertex 可以有多个 ExecutionEdge
+ * Flink 1.13及之后被 EdgeManager 替代。
  */
 public abstract class InputChannel {
     /** The info of the input channel to identify it globally within a task. */

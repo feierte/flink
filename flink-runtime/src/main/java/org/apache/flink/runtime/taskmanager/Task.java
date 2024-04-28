@@ -137,6 +137,8 @@ import static org.apache.flink.util.Preconditions.checkState;
  * intermediate results to consume and produce (if any).
  *
  * <p>Each Task is run by one dedicated thread.
+ *
+ * @apiNote 物理执行图中的一个组件，Execution 被调度后在分配的 TaskManager 中启动对应的 Task。Task 包含了具有用户执行逻辑的 operator。
  */
 public class Task
         implements Runnable, TaskSlotPayload, TaskActions, PartitionProducerStateProvider {
