@@ -43,6 +43,10 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
+/**
+ * 算子的输出。和 JobGraph 中的 IntermediateDataSet 一一对应。一个 IntermediateResult 包含多个 IntermediateResultPartition，
+ * 其个数等于该 operator 的并行度。
+ */
 public class IntermediateResult {
 
     private final IntermediateDataSet intermediateDataSet;

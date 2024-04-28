@@ -31,6 +31,8 @@ import static org.apache.flink.util.Preconditions.checkState;
  * intermediate operation.
  *
  * <p>Intermediate data sets may be read by other operators, materialized, or discarded.
+ *
+ * @apiNote 表示 JobVertex 的输出，即经过 operator 处理产生的数据集。
  */
 public class IntermediateDataSet implements java.io.Serializable {
 
