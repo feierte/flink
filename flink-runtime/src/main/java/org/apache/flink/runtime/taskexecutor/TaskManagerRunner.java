@@ -106,6 +106,8 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * This class is the executable entry point for the task manager in yarn or standalone mode. It
  * constructs the related components (network, I/O manager, memory manager, RPC service, HA service)
  * and starts them.
+ *
+ * @apiNote Flink 从节点（TaskManager）的实现，包含了多个重要组件。
  */
 public class TaskManagerRunner implements FatalErrorHandler {
 
@@ -795,6 +797,9 @@ public class TaskManagerRunner implements FatalErrorHandler {
                 throws Exception;
     }
 
+    /**
+     * TaskManager 中的重要组件，封装了 TaskExecutor，负责 TaskExecutor 的生命周期管理：启动、关闭。
+     */
     public interface TaskExecutorService extends AutoCloseableAsync {
         void start();
 

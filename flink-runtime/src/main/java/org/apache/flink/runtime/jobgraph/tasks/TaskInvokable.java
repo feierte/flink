@@ -42,6 +42,8 @@ import javax.annotation.Nullable;
  * @see CheckpointableTask
  * @see CoordinatedTask
  * @see AbstractInvokable
+ *
+ * @apiNote Task 启动类，用于启动一个 Task。
  */
 @Internal
 public interface TaskInvokable {
