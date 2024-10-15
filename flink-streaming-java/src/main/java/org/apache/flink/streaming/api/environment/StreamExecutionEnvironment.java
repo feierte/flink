@@ -2080,6 +2080,12 @@ public class StreamExecutionEnvironment {
     @Internal
     public StreamGraph getStreamGraph(boolean clearTransformations) {
         final StreamGraph streamGraph = getStreamGraphGenerator(transformations).generate();
+
+        /**
+         * 生成 StreamGraph 后为什么要清空 transformations ?
+         * 一开始自己的思考是认为清空 transformations 是为了防止反复提交同一个任务。
+         * 其实是为了 env 能够重复使用。
+         */
         if (clearTransformations) {
             transformations.clear();
         }

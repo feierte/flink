@@ -26,15 +26,18 @@ bin=`cd "$bin"; pwd`
 shopt -s nocasematch
 if [[ $HIGH_AVAILABILITY == "zookeeper" ]]; then
     # HA Mode
+    # 读取 masters 配置文件，获取主节点的配置信息
     readMasters
 
     echo "Starting HA cluster with ${#MASTERS[@]} masters."
-
+    # 遍历启动多个主节点
     for ((i=0;i<${#MASTERS[@]};++i)); do
+        # 读取到的其中一个主节点
         master=${MASTERS[i]}
         webuiport=${WEBUIPORTS[i]}
 
         if [ ${MASTERS_ALL_LOCALHOST} = true ] ; then
+            # 启动主节点（JobManager）的命令
             "${FLINK_BIN_DIR}"/jobmanager.sh start "${master}" "${webuiport}"
         else
             ssh -n $FLINK_SSH_OPTS $master -- "nohup /bin/bash -l \"${FLINK_BIN_DIR}/jobmanager.sh\" start ${master} ${webuiport} &"
@@ -50,4 +53,5 @@ fi
 shopt -u nocasematch
 
 # Start TaskManager instance(s)
+# 启动从节点实例（TaskManager）
 TMWorkers start

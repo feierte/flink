@@ -915,9 +915,12 @@ public abstract class ResourceManager<WorkerType extends ResourceIDRetrievable>
                     taskExecutorAddress);
             taskExecutors.put(taskExecutorResourceId, registration);
 
+            // 从节点（TaskManager）向主节点（ResourceManager）注册成功，那么从节点就作为主节点的一个心跳目标对象。
+            // 将从节点封装为一个 TaskExecutorHeartbeatTarget 对象。
             taskManagerHeartbeatManager.monitorTarget(
                     taskExecutorResourceId, new TaskExecutorHeartbeatTarget(taskExecutorGateway));
 
+            // 构造注册成功的响应返回给从节点
             return new TaskExecutorRegistrationSuccess(
                     registration.getInstanceID(), resourceId, clusterInformation);
         }
