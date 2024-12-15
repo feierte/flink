@@ -43,6 +43,12 @@ import static org.apache.flink.util.Preconditions.checkArgument;
  * DataStream} with one predefined output type.
  *
  * @param <T> The type of the elements in this stream.
+ *
+ * @apiNote SingleOutputStreamOperator 是一个 DataStream，但单从类名的命名很难看出这是一个 DataStream，这是一个新手容易误解的地方，
+ * 也是 flink 命名不规范的一个地方。
+ * 随着对 flink 了解的加深，SingleOutputStreamOperator 这种命名方式从源码实现的角度来看也没毛病，DataStream 的底层实现就是通过 StreamOperator 来完成，
+ * 所以这样命名也没问题，但是毕竟该类是 flink 面向用户的 api，这个类名对于初学者很容易产生疑惑，使用 SingleOutputDataStream 是一个更好的选择，
+ * 即清晰的表达了它是 DataStream 的一个子类，让初学者没有疑惑，也表明了它是一个单一输出的 DataStream。
  */
 @Public
 public class SingleOutputStreamOperator<T> extends DataStream<T> {

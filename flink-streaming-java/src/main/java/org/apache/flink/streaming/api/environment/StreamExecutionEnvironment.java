@@ -1996,7 +1996,9 @@ public class StreamExecutionEnvironment implements AutoCloseable {
 
         clean(function);
 
+        // 将 Function 封装成 Operator，SourceFunction -> StreamSource（是一个 StreamOperator）
         final StreamSource<OUT, ?> sourceOperator = new StreamSource<>(function);
+        //返回一个 DataStream，DataStreamSource 是一个 DataStream
         return new DataStreamSource<>(
                 this, resolvedTypeInfo, sourceOperator, isParallel, sourceName, boundedness);
     }

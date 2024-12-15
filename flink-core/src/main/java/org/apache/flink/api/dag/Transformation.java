@@ -102,6 +102,9 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * connect the sources to the map operation.
  *
  * @param <T> The type of the elements that result from this {@code Transformation}
+ *
+ * @apiNote Transformation 在很多博客中被称为转换算子，用于 DataStream 转换，即将一个或多个 DataStream 转换成新的 DataStream。
+ * 基于 Transformation 可以构建复杂数据流拓扑结构。
  */
 @Internal
 public abstract class Transformation<T> {

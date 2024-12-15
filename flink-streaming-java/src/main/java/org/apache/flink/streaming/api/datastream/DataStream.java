@@ -591,6 +591,8 @@ public class DataStream<T> {
      */
     public <R> SingleOutputStreamOperator<R> map(
             MapFunction<T, R> mapper, TypeInformation<R> outputType) {
+        // 先将 Function 封装为 Operator（StreamMap 是一个 StreamOperator）
+        // 在调用 transform 方法，将 Operator 转换为 Transformation
         return transform("Map", outputType, new StreamMap<>(clean(mapper)));
     }
 
@@ -1194,6 +1196,7 @@ public class DataStream<T> {
         // read the output type of the input Transform to coax out errors about MissingTypeInfo
         transformation.getOutputType();
 
+        // 将 Operator 转换为 Transformation
         OneInputTransformation<T, R> resultTransform =
                 new OneInputTransformation<>(
                         this.transformation,
@@ -1203,6 +1206,7 @@ public class DataStream<T> {
                         environment.getParallelism(),
                         false);
 
+        // 再将 Transformation 包装成 DataStream
         @SuppressWarnings({"unchecked", "rawtypes"})
         SingleOutputStreamOperator<R> returnStream =
                 new SingleOutputStreamOperator(environment, resultTransform);
