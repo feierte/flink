@@ -48,10 +48,17 @@ import java.util.List;
 public class SlidingEventTimeWindows extends WindowAssigner<Object, TimeWindow> {
     private static final long serialVersionUID = 1L;
 
-    private final long size;
+    private final long size; // 窗口大小
 
-    private final long slide;
+    private final long slide; // 窗口滑步大小
 
+    /**
+     * 用来调整窗口在时间轴上的对齐点。它可以理解为“窗口边界相对于 epoch 的偏移”。
+     *  1.默认 offset = 0：窗口边界对齐到 1970-01-01 00:00:00 UTC。
+     *  2.国内常用：处理每日统计时，offset = Time.hours(-8).toMilliseconds()，让窗口边界对齐到北京时间 00:00:00，而不是 UTC 的 08:00:00。
+     *  3.任何移位：也可用于将窗口对齐到任意分钟秒，如每5分钟统计，offset = 2分钟 可以让窗口边界落于 2,7,12... 分钟。
+     * 计算时，offset 被纳入取模运算，保证对齐规则统一。
+     */
     private final long offset;
 
     protected SlidingEventTimeWindows(long size, long slide, long offset) {

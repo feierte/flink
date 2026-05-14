@@ -44,8 +44,8 @@ import java.util.Set;
 @PublicEvolving
 public class TimeWindow extends Window {
 
-    private final long start;
-    private final long end;
+    private final long start; // 窗口的开始时间（包含）
+    private final long end; // 窗口的结束时间（不包含）
 
     public TimeWindow(long start, long end) {
         this.start = start;

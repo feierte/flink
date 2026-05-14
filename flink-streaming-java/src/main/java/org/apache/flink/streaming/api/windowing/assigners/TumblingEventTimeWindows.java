@@ -70,6 +70,7 @@ public class TumblingEventTimeWindows extends WindowAssigner<Object, TimeWindow>
     public Collection<TimeWindow> assignWindows(
             Object element, long timestamp, WindowAssignerContext context) {
         if (timestamp > Long.MIN_VALUE) {
+            // 这是一个新特性，为了解决同一时间触发大量的窗口计算造成的性能问题
             if (staggerOffset == null) {
                 staggerOffset =
                         windowStagger.getStaggerOffset(context.getCurrentProcessingTime(), size);
