@@ -51,11 +51,12 @@ public class StandaloneSessionClusterEntrypoint extends SessionClusterEntrypoint
                         args,
                         new EntrypointClusterConfigurationParserFactory(),
                         StandaloneSessionClusterEntrypoint.class);
+        // 解析配置文件：masters workers zoo.cfg flink-conf.yaml 四个配置文件
         Configuration configuration = loadConfiguration(entrypointClusterConfiguration);
-
+        // 创建集群启动类实例
         StandaloneSessionClusterEntrypoint entrypoint =
                 new StandaloneSessionClusterEntrypoint(configuration);
-
+        // 启动集群
         ClusterEntrypoint.runClusterEntrypoint(entrypoint);
     }
 }

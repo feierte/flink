@@ -110,6 +110,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <p>Specialization of this class can be used for the session mode and the per-job mode
  *
  * @apiNote Flink Job不同提交模式的入口类，也是主节点的启动类。
+ * <p>
+ * ClusterEntrypoint 内部会启动三个非常重要的服务组件：
+ *  1.Dispatcher 组件
+ *  2.WebMonitorEndpoint 组件
+ *  3.ResourceManager 组件
+ * 不管是哪种实现类，启动流程都是一样的，只不过在不同实现类中，这三个组件的具体实现类不同。
  */
 public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErrorHandler {
 
@@ -283,6 +289,14 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
         return SecurityUtils.getInstalledContext();
     }
 
+    /**
+     * 1.初始化主节点中用到的一大堆基础服务：initializeServices(...) 方法
+     * 2.创建三大组件的工厂类实例
+     * 3.创建三大组件：ResourceManager、WebMonitorEndpoint、Dispatcher，并且启动
+     * @param configuration
+     * @param pluginManager
+     * @throws Exception
+     */
     private void runCluster(Configuration configuration, PluginManager pluginManager)
             throws Exception {
         synchronized (lock) {
