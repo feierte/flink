@@ -51,6 +51,9 @@ import java.io.Serializable;
  *
  * @param <T> The type of elements on which this {@code Trigger} works.
  * @param <W> The type of {@link Window Windows} on which this {@code Trigger} can operate.
+ *
+ * @apiNote Trigger 内部不能直接持有成员变量状态，必须通过 {@code TriggerContext.getPartitionedState()} 使用 Flink 的托管状态（keyed state）。
+ * 注意：其他 Flink 中的组件如果需要状态存储，也需要先考虑使用 Flink 的托管状态（keyed state）。
  */
 @PublicEvolving
 public abstract class Trigger<T, W extends Window> implements Serializable {

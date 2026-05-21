@@ -26,6 +26,9 @@ import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
  * belongs.
  *
  * @see org.apache.flink.streaming.api.watermark.Watermark
+ *
+ * @apiNote 事件时间触发器，当 {@code Watermark} 越过窗口结束时间时触发。
+ * 这是事件时间的默认{@code Trigger}
  */
 @PublicEvolving
 public class EventTimeTrigger extends Trigger<Object, TimeWindow> {

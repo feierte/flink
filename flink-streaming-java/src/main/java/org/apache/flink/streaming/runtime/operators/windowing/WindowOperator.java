@@ -92,6 +92,11 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * @param <IN> The type of the incoming elements.
  * @param <OUT> The type of elements emitted by the {@code InternalWindowFunction}.
  * @param <W> The type of {@code Window} that the {@code WindowAssigner} assigns.
+ *
+ * @apiNote 几个关键点
+ *  Trigger 实例本身作为 WindowOperator 的成员变量，在构造函数中传入并保存。
+ *  Context（即 TriggerContext 实现）在 open() 中创建，它是 Trigger 与底层 Flink 运行时的桥梁。
+ *  Trigger 不直接持有定时器服务，而是通过 Context 的方法间接调用 InternalTimerService。
  */
 @Internal
 public class WindowOperator<K, IN, ACC, OUT, W extends Window>
@@ -213,8 +218,9 @@ public class WindowOperator<K, IN, ACC, OUT, W extends Window>
         this.numLateRecordsDropped = metrics.counter(LATE_ELEMENTS_DROPPED_METRIC_NAME);
         timestampedCollector = new TimestampedCollector<>(output);
 
+        // 创建定时器服务（TimerService）
         internalTimerService = getInternalTimerService("window-timers", windowSerializer, this);
-
+        // 创建 TriggerContext —— Trigger ↔ Operator 的桥梁
         triggerContext = new Context(null, null);
         processContext = new WindowContext(null);
 
@@ -228,6 +234,7 @@ public class WindowOperator<K, IN, ACC, OUT, W extends Window>
 
         // create (or restore) the state that hold the actual window contents
         // NOTE - the state may be null in the case of the overriding evicting window operator
+        // 恢复或创建窗口状态存储
         if (windowStateDescriptor != null) {
             windowState =
                     (InternalAppendingState<K, W, IN, ACC, ACC>)
@@ -235,6 +242,7 @@ public class WindowOperator<K, IN, ACC, OUT, W extends Window>
         }
 
         // create the typed and helper states for merging windows
+        // 如果是 MergingWindowAssigner，初始化合并相关状态
         if (windowAssigner instanceof MergingWindowAssigner) {
 
             // store a typed reference for the state of merging windows - sanity check
@@ -275,6 +283,7 @@ public class WindowOperator<K, IN, ACC, OUT, W extends Window>
 
     @Override
     public void processElement(StreamRecord<IN> element) throws Exception {
+        // 为事件分配窗口，WindowAssigner 分配窗口
         final Collection<W> elementWindows =
                 windowAssigner.assignWindows(
                         element.getValue(), element.getTimestamp(), windowAssignerContext);
@@ -395,25 +404,29 @@ public class WindowOperator<K, IN, ACC, OUT, W extends Window>
                 }
                 isSkippedElement = false;
 
+                // 更新窗口状态
                 windowState.setCurrentNamespace(window);
                 windowState.add(element.getValue());
 
                 triggerContext.key = key;
                 triggerContext.window = window;
 
+                // 调用触发器 Trigger 的 onElement 方法
                 TriggerResult triggerResult = triggerContext.onElement(element);
 
+                // 根据触发器结果决定 （1）如何处理窗口状态 （2）是否进行窗口计算
                 if (triggerResult.isFire()) {
                     ACC contents = windowState.get();
                     if (contents == null) {
                         continue;
                     }
-                    emitWindowContents(window, contents);
+                    emitWindowContents(window, contents); // 执行窗口函数
                 }
 
                 if (triggerResult.isPurge()) {
-                    windowState.clear();
+                    windowState.clear(); // 清理窗口状态
                 }
+                // 注册定时器来清理窗口的状态
                 registerCleanupTimer(window);
             }
         }
@@ -536,10 +549,10 @@ public class WindowOperator<K, IN, ACC, OUT, W extends Window>
     private void clearAllState(
             W window, AppendingState<IN, ACC> windowState, MergingWindowSet<W> mergingWindows)
             throws Exception {
-        windowState.clear();
-        triggerContext.clear();
+        windowState.clear(); // 清理窗口中的数据
+        triggerContext.clear(); // 清理 Trigger 状态
         processContext.window = window;
-        processContext.clear();
+        processContext.clear(); // 清理 ProcessWindowFunction 状态
         if (mergingWindows != null) {
             mergingWindows.retireWindow(window);
             mergingWindows.persist();
@@ -796,6 +809,8 @@ public class WindowOperator<K, IN, ACC, OUT, W extends Window>
      * {@code Context} is a utility for handling {@code Trigger} invocations. It can be reused by
      * setting the {@code key} and {@code window} fields. No internal state must be kept in the
      * {@code Context}
+     *
+     * @apiNote Context 是可重用对象，不属于特定窗口。每次调用前设置 key 和 window 字段，避免每次创建新对象。
      */
     public class Context implements Trigger.OnMergeContext {
         protected K key;
@@ -910,6 +925,7 @@ public class WindowOperator<K, IN, ACC, OUT, W extends Window>
         }
 
         public TriggerResult onElement(StreamRecord<IN> element) throws Exception {
+            // Context 是 TriggerContext 的实现，直接委托给 Trigger
             return trigger.onElement(element.getValue(), element.getTimestamp(), window, this);
         }
 

@@ -19,6 +19,8 @@
 package org.apache.flink.streaming.api;
 
 import org.apache.flink.annotation.PublicEvolving;
+import org.apache.flink.streaming.api.functions.ProcessFunction;
+import org.apache.flink.util.Collector;
 
 /** Interface for working with time and timers. */
 @PublicEvolving
@@ -53,6 +55,9 @@ public interface TimerService {
      * context, such as in an operation on {@link
      * org.apache.flink.streaming.api.datastream.KeyedStream} then that context will also be active
      * when you receive the timer notification.
+     *
+     * @apiNote 注册定时器，该定时器以事件时间为准；参数 time 就是定时器的触发时间；
+     * 定时器触发后，会调用 {@link org.apache.flink.streaming.api.functions.ProcessFunction#onTimer(long, ProcessFunction.OnTimerContext, Collector)}
      */
     void registerEventTimeTimer(long time);
 
