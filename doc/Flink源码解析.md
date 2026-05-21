@@ -11,3 +11,10 @@
 ## JobGraph构建及提交流程
 
 ## ExecutionGraph构建及提交流程
+
+
+# 专题
+
+## flink 类型体系
+
+### 序列化
