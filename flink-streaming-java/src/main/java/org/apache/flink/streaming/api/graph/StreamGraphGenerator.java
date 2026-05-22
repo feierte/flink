@@ -183,6 +183,14 @@ public class StreamGraphGenerator {
 
     private boolean shouldExecuteInBatchMode;
 
+    /**
+     * 内部维护了一个 translatorMap，将每种 Transformation 类型映射到对应的翻译器。
+     * 每种翻译器负责：
+     *  - 创建 StreamNode（算子节点）
+     *  - 创建 StreamEdge（连接边）
+     *  - 处理虚拟 Transformation（如 PartitionTransformation 不产生新节点，只修改上游边的分发属性）
+     *  - 确定算子链（chaining）策略
+     */
     @SuppressWarnings("rawtypes")
     private static final Map<
                     Class<? extends Transformation>,
@@ -324,14 +332,16 @@ public class StreamGraphGenerator {
 
         alreadyTransformed = new IdentityHashMap<>();
 
+        // 遍历所有 Transformation，逐一翻译为 StreamNode + StreamEdge
         for (Transformation<?> transformation : transformations) {
             transform(transformation);
         }
 
+        // 设置 SlotSharingGroup 细粒度资源配置
         streamGraph.setSlotSharingGroupResource(slotSharingGroupResources);
-
+        // 设置全局数据交换模式
         setFineGrainedGlobalStreamExchangeMode(streamGraph);
-
+        // 处理非对齐检查点支持标记
         for (StreamNode node : streamGraph.getStreamNodes()) {
             if (node.getInEdges().stream().anyMatch(this::shouldDisableUnalignedCheckpointing)) {
                 for (StreamEdge edge : node.getInEdges()) {

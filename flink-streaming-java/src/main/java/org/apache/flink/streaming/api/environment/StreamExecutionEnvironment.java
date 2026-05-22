@@ -188,6 +188,9 @@ public class StreamExecutionEnvironment implements AutoCloseable {
     /** Settings that control the checkpointing behavior. */
     protected final CheckpointConfig checkpointCfg = new CheckpointConfig();
 
+    /**
+     * 用户每调用一个算子（map、filter、keyBy、window 等），底层就会创建一个对应的 Transformation 对象添加到该列表中。
+     */
     protected final List<Transformation<?>> transformations = new ArrayList<>();
 
     private final Map<AbstractID, CacheTransformation<?>> cachedTransformations = new HashMap<>();
@@ -2092,6 +2095,7 @@ public class StreamExecutionEnvironment implements AutoCloseable {
      */
     public JobExecutionResult execute(String jobName) throws Exception {
         final List<Transformation<?>> originalTransformations = new ArrayList<>(transformations);
+        // 生成 StreamGraph
         StreamGraph streamGraph = getStreamGraph();
         if (jobName != null) {
             streamGraph.setJobName(jobName);

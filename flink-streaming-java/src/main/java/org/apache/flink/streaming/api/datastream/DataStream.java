@@ -1199,7 +1199,7 @@ public class DataStream<T> {
         // 将 Operator 转换为 Transformation
         OneInputTransformation<T, R> resultTransform =
                 new OneInputTransformation<>(
-                        this.transformation,
+                        this.transformation, // 上游的 Transformation
                         operatorName,
                         operatorFactory,
                         outTypeInfo,
