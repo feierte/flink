@@ -85,7 +85,9 @@ public class ApplicationClusterEntryPoint extends ClusterEntrypoint {
 
     protected static void configureExecution(
             final Configuration configuration, final PackagedProgram program) throws Exception {
+        // execution.target = embedded
         configuration.set(DeploymentOptions.TARGET, EmbeddedExecutor.NAME);
+        // 同时把用户 jars/classpaths 编码进 PipelineOptions.JARS / CLASSPATHS
         ConfigUtils.encodeCollectionToConfig(
                 configuration,
                 PipelineOptions.JARS,

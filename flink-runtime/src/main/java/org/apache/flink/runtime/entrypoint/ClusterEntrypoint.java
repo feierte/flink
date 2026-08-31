@@ -300,6 +300,7 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
     private void runCluster(Configuration configuration, PluginManager pluginManager)
             throws Exception {
         synchronized (lock) {
+            // 基础服务初始化
             initializeServices(configuration, pluginManager);
 
             // write host information into configuration
@@ -310,6 +311,10 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
                     dispatcherResourceManagerComponentFactory =
                             createDispatcherResourceManagerComponentFactory(configuration);
 
+            // 创建并启动三大组件：
+            // WebMonitorEndpoint（REST 服务，对外 Web UI）
+            // ResourceManagerService → StandaloneResourceManager，并参与 leader 选举
+            // DispatcherRunner → DefaultDispatcherRunner，向 HA 服务注册 leader 选举
             clusterComponent =
                     dispatcherResourceManagerComponentFactory.create(
                             configuration,
@@ -327,6 +332,7 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
                             failureEnrichers,
                             this);
 
+            // 同时注册 clusterComponent.getShutDownFuture() 监听，组件关闭时触发整个 entrypoint 的优雅退出。
             clusterComponent
                     .getShutDownFuture()
                     .whenComplete(
@@ -382,6 +388,7 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
 
             rpcSystem = RpcSystem.load(configuration);
 
+            // Akka RPC 服务（JobManager 地址/端口）
             commonRpcService =
                     RpcUtils.createRemoteRpcService(
                             rpcSystem,
@@ -409,8 +416,11 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
                             ioExecutor);
             // Obtaining delegation tokens and propagating them to the local JVM receivers in a
             // one-time fashion is required because BlobServer may connect to external file systems
+            // 委托令牌（对接外部文件系统）
             delegationTokenManager.obtainDelegationTokens();
+            // 高可用服务（ZooKeeper 或 NONE）
             haServices = createHaServices(configuration, ioExecutor, rpcSystem);
+            // jar/大对象分发服务，随即可用端口启动
             blobServer =
                     BlobUtils.createBlobServer(
                             configuration,
@@ -418,6 +428,7 @@ public abstract class ClusterEntrypoint implements AutoCloseableAsync, FatalErro
                             haServices.createBlobStore());
             blobServer.start();
             configuration.setString(BlobServerOptions.PORT, String.valueOf(blobServer.getPort()));
+            // 心跳服务
             heartbeatServices = createHeartbeatServices(configuration);
             failureEnrichers = FailureEnricherUtils.getFailureEnrichers(configuration);
             metricRegistry = createMetricRegistry(configuration, pluginManager, rpcSystem);

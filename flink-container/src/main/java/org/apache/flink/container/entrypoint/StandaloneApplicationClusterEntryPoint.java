@@ -60,7 +60,12 @@ public final class StandaloneApplicationClusterEntryPoint extends ApplicationClu
                         new StandaloneApplicationClusterConfigurationParserFactory(),
                         StandaloneApplicationClusterEntryPoint.class);
 
+        // 加载配置
+        // （1）记载配置文件 flink-conf.yaml（GlobalConfiguration）
+        // （2）设置静态作业ID，若指定了 JobID → 写入 pipeline.fixed-job-id（PipelineOptionsInternal.PIPELINE_FIXED_JOB_ID）
+        // （3）设置保存点恢复设置
         Configuration configuration = loadConfigurationFromClusterConfig(clusterConfiguration);
+        // 构建用户程序 PackagedProgram：DefaultPackagedProgramRetriever 从 usrlib 目录定位用户 jar、主类和参数
         PackagedProgram program = null;
         try {
             program = getPackagedProgram(clusterConfiguration, configuration);
@@ -70,12 +75,14 @@ public final class StandaloneApplicationClusterEntryPoint extends ApplicationClu
         }
 
         try {
+            // Application 模式的关键配置
             configureExecution(configuration, program);
         } catch (Exception e) {
             LOG.error("Could not apply application configuration.", e);
             System.exit(1);
         }
 
+        // ClusterEntrypoint 启动集群
         StandaloneApplicationClusterEntryPoint entrypoint =
                 new StandaloneApplicationClusterEntryPoint(configuration, program);
 

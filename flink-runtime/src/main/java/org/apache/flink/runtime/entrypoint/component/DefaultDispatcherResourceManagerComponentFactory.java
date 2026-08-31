@@ -223,6 +223,9 @@ public class DefaultDispatcherResourceManagerComponentFactory
                             failureEnrichers);
 
             log.debug("Starting Dispatcher.");
+            // Dispatcher 采用 Leader 选举驱动模式
+            // DefaultDispatcherRunnerFactory.createDispatcherRunner 启动 leader election，
+            // 本节点当选后回调 ApplicationDispatcherLeaderProcessFactory → ApplicationDispatcherGatewayServiceFactory.create()
             dispatcherRunner =
                     dispatcherRunnerFactory.createDispatcherRunner(
                             highAvailabilityServices.getDispatcherLeaderElection(),
